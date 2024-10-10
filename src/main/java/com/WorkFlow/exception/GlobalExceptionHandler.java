@@ -3,6 +3,7 @@ package com.WorkFlow.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException exception) {
         String message = "Incorrect JSON format: " + exception.getMessage();
         return buildResponseEntity(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException exception) {
+        String message = "Authentication failed: " + exception.getMessage();
+        return buildResponseEntity(message, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

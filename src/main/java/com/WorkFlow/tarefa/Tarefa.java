@@ -2,7 +2,8 @@ package com.WorkFlow.tarefa;
 
 import com.WorkFlow.categoria.Categoria;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -23,10 +24,10 @@ public class Tarefa {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer status;
     private Date dataInicio;
     private String descricao;
     private String titulo;
+    private Integer status;
     private Integer prioridade;
 
     @ManyToOne

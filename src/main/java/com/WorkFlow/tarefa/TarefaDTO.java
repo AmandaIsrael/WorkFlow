@@ -21,10 +21,10 @@ public class TarefaDTO {
 
     private Long id;
     private Long categoria_id;
-    private Integer status;
     private Date dataInicio;
     private String descricao;
     @NotNull(message = "The 'titulo' field cannot be null.")
     private String titulo;
+    private Integer status;
     private Integer prioridade;
 }
