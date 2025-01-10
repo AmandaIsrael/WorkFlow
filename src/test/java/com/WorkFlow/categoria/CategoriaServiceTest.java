@@ -146,6 +146,7 @@ class CategoriaServiceTest {
 
     @Test
     void testIfCannotUpdateWhenIdDoesNotExists() {
+        // given
         Long categoriaId = 1L;
 
         CategoriaDTO newCategoriaDTO = new CategoriaDTO();

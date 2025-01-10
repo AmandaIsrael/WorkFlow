@@ -16,7 +16,7 @@ public class Tarefa {
     public Tarefa(TarefaDTO tarefaDTO) {
         this.id = tarefaDTO.getId();
         this.status = tarefaDTO.getStatus();
-        this.dataInicio = tarefaDTO.getDataInicio();
+        this.prazo = tarefaDTO.getPrazo();
         this.descricao = tarefaDTO.getDescricao();
         this.titulo = tarefaDTO.getTitulo();
         this.prioridade = tarefaDTO.getPrioridade();
@@ -24,7 +24,7 @@ public class Tarefa {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date dataInicio;
+    private Date prazo;
     private String descricao;
     private String titulo;
     private Integer status;

@@ -138,7 +138,7 @@ class TarefaServiceTest {
         tarefaDTO.setTitulo("titulo");
         tarefaDTO.setStatus(0);
         tarefaDTO.setDescricao("descricao");
-        tarefaDTO.setDataInicio(new Date());
+        tarefaDTO.setPrazo(new Date());
 
         Tarefa tarefa = new Tarefa(tarefaDTO);
 
@@ -165,7 +165,7 @@ class TarefaServiceTest {
         tarefaDTO.setTitulo("titulo");
         tarefaDTO.setStatus(0);
         tarefaDTO.setDescricao("descricao");
-        tarefaDTO.setDataInicio(new Date());
+        tarefaDTO.setPrazo(new Date());
 
         CategoriaDTO categoriaDTO = new CategoriaDTO();
         categoriaDTO.setId(categoriaId);
@@ -198,7 +198,7 @@ class TarefaServiceTest {
         tarefaDTO.setTitulo("titulo");
         tarefaDTO.setStatus(0);
         tarefaDTO.setDescricao("descricao");
-        tarefaDTO.setDataInicio(new Date());
+        tarefaDTO.setPrazo(new Date());
 
         when(categoriaService.findById(1L)).thenReturn(Optional.empty());
         // then
@@ -216,7 +216,7 @@ class TarefaServiceTest {
         tarefaDTO.setTitulo("titulo");
         tarefaDTO.setStatus(0);
         tarefaDTO.setDescricao("descricao");
-        tarefaDTO.setDataInicio(new Date());
+        tarefaDTO.setPrazo(new Date());
         // then
         assertThrows(TarefaNotFoundException.class, () -> {
             // when

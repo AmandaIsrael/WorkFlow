@@ -13,7 +13,7 @@ public class TarefaDTO {
     public TarefaDTO(Tarefa tarefa) {
         this.id = tarefa.getId();
         this.status = tarefa.getStatus();
-        this.dataInicio = tarefa.getDataInicio();
+        this.prazo = tarefa.getPrazo();
         this.descricao = tarefa.getDescricao();
         this.titulo = tarefa.getTitulo();
         this.prioridade = tarefa.getPrioridade();
@@ -21,7 +21,7 @@ public class TarefaDTO {
 
     private Long id;
     private Long categoria_id;
-    private Date dataInicio;
+    private Date prazo;
     private String descricao;
     @NotNull(message = "The 'titulo' field cannot be null.")
     private String titulo;

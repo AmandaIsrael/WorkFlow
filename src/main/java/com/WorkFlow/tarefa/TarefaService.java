@@ -79,7 +79,7 @@ public class TarefaService {
 
     private void updateTarefaDTO(TarefaDTO existingTarefaDTO, TarefaDTO newTarefaDTO) {
         existingTarefaDTO.setStatus(newTarefaDTO.getStatus());
-        existingTarefaDTO.setDataInicio(newTarefaDTO.getDataInicio());
+        existingTarefaDTO.setPrazo(newTarefaDTO.getPrazo());
         existingTarefaDTO.setDescricao(newTarefaDTO.getDescricao());
         existingTarefaDTO.setTitulo(newTarefaDTO.getTitulo());
         existingTarefaDTO.setPrioridade(newTarefaDTO.getPrioridade());
