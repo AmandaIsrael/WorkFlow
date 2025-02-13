@@ -25,6 +25,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // disabled the CSRF directly
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/authentication/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
