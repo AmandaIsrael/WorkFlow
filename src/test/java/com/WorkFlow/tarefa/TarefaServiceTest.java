@@ -1,9 +1,11 @@
 package com.WorkFlow.tarefa;
 
-import com.WorkFlow.categoria.Categoria;
-import com.WorkFlow.categoria.CategoriaDTO;
-import com.WorkFlow.categoria.CategoriaService;
-import com.WorkFlow.exception.CategoriaNotFoundException;
+import com.WorkFlow.category.Category;
+import com.WorkFlow.category.CategoryDTO;
+import com.WorkFlow.category.CategoryService;
+import com.WorkFlow.enums.Priority;
+import com.WorkFlow.enums.Status;
+import com.WorkFlow.exception.CategoryNotFoundException;
 import com.WorkFlow.exception.TarefaNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -22,7 +25,7 @@ import static org.mockito.Mockito.*;
 class TarefaServiceTest {
 
     @Mock private TarefaRepository tarefaRepository;
-    @Mock private CategoriaService categoriaService;
+    @Mock private CategoryService categoryService;
     @InjectMocks private TarefaService tarefaService;
 
     @Test
@@ -92,53 +95,53 @@ class TarefaServiceTest {
     }
 
     @Test
-    void testIfCanFindListTarefaDTOWithCategoriaId() {
+    void testIfCanFindListTarefaDTOWithcategoryId() {
         // given
-        Long categoriaId = 1L;
+        Long categoryId = 1L;
 
-        Categoria categoria = new Categoria();
-        categoria.setId(categoriaId);
+        Category category = new Category();
+        category.setId(categoryId);
 
         Tarefa tarefa = new Tarefa();
-        tarefa.setCategoria(categoria);
+        tarefa.setCategory(category);
 
         List<Tarefa> tarefaList = List.of(tarefa);
 
         TarefaDTO tarefaDTO = new TarefaDTO(tarefa);
-        tarefaDTO.setCategoria_id(categoriaId);
+        tarefaDTO.setCategory_id(categoryId);
 
         List<TarefaDTO> tarefaDTOList = List.of(tarefaDTO);
 
-        when(tarefaRepository.findByCategoriaId(categoriaId)).thenReturn(tarefaList);
+        when(tarefaRepository.findByCategoryId(categoryId)).thenReturn(tarefaList);
         // when
-        List<TarefaDTO> result = tarefaService.findByCategoriaId(categoriaId);
+        List<TarefaDTO> result = tarefaService.findByCategoryId(categoryId);
         // then
-        verify(tarefaRepository).findByCategoriaId(categoriaId);
+        verify(tarefaRepository).findByCategoryId(categoryId);
         assertThat(tarefaDTOList).isEqualTo(result);
     }
 
     @Test
-    void testIfCannotFindListTarefaDTOWithCategoriaId() {
+    void testIfCannotFindListTarefaDTOWithcategoryId() {
         // given
-        Long categoriaId = 1L;
+        Long categoryId = 1L;
 
-        when(tarefaRepository.findByCategoriaId(categoriaId)).thenReturn(Collections.emptyList());
+        when(tarefaRepository.findByCategoryId(categoryId)).thenReturn(Collections.emptyList());
         // when
-        List<TarefaDTO> result = tarefaService.findByCategoriaId(categoriaId);
+        List<TarefaDTO> result = tarefaService.findByCategoryId(categoryId);
         // then
-        verify(tarefaRepository).findByCategoriaId(categoriaId);
+        verify(tarefaRepository).findByCategoryId(categoryId);
         assertTrue(result.isEmpty());
     }
 
     @Test
-    void testIfCanSaveTarefaWithoutCategoriaId() {
+    void testIfCanSaveTarefaWithoutcategoryId() {
         // given
         TarefaDTO tarefaDTO = new TarefaDTO();
-        tarefaDTO.setPrioridade(0);
-        tarefaDTO.setTitulo("titulo");
-        tarefaDTO.setStatus(0);
-        tarefaDTO.setDescricao("descricao");
-        tarefaDTO.setPrazo(new Date());
+        tarefaDTO.setPriority(Priority.LOW);
+        tarefaDTO.setTitle("titulo");
+        tarefaDTO.setStatus(Status.IN_PROGRESS);
+        tarefaDTO.setDescription("descricao");
+        tarefaDTO.setDeadline(LocalDate.now());
 
         Tarefa tarefa = new Tarefa(tarefaDTO);
 
@@ -151,31 +154,31 @@ class TarefaServiceTest {
 
         Tarefa capturedTarefa = tarefaArgumentCaptor.getValue();
         assertThat(capturedTarefa).isEqualTo(tarefa);
-        assertNull(capturedTarefa.getCategoria());
+        assertNull(capturedTarefa.getCategory());
     }
 
     @Test
-    void testIfCanSaveTarefaWithCategoriaId() {
+    void testIfCanSaveTarefaWithcategoryId() {
         // given
-        Long categoriaId = 1L;
+        Long categoryId = 1L;
         
         TarefaDTO tarefaDTO = new TarefaDTO();
-        tarefaDTO.setCategoria_id(categoriaId);
-        tarefaDTO.setPrioridade(0);
-        tarefaDTO.setTitulo("titulo");
-        tarefaDTO.setStatus(0);
-        tarefaDTO.setDescricao("descricao");
-        tarefaDTO.setPrazo(new Date());
+        tarefaDTO.setCategory_id(categoryId);
+        tarefaDTO.setPriority(Priority.LOW);
+        tarefaDTO.setTitle("titulo");
+        tarefaDTO.setStatus(Status.IN_PROGRESS);
+        tarefaDTO.setDescription("descricao");
+        tarefaDTO.setDeadline(LocalDate.now());
 
-        CategoriaDTO categoriaDTO = new CategoriaDTO();
-        categoriaDTO.setId(categoriaId);
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setId(categoryId);
 
-        Categoria categoria = new Categoria(categoriaDTO);
+        Category category = new Category(categoryDTO);
 
         Tarefa tarefa = new Tarefa(tarefaDTO);
-        tarefa.setCategoria(categoria);
+        tarefa.setCategory(category);
 
-        when(categoriaService.findById(categoriaId)).thenReturn(Optional.of(categoriaDTO));
+        when(categoryService.findById(categoryId)).thenReturn(Optional.of(categoryDTO));
         when(tarefaRepository.save(any(Tarefa.class))).thenReturn(tarefa);
         // when
         tarefaService.save(tarefaDTO);
@@ -185,24 +188,24 @@ class TarefaServiceTest {
 
         Tarefa capturedTarefa = tarefaArgumentCaptor.getValue();
         assertThat(capturedTarefa).isEqualTo(tarefa);
-        assertNotNull(capturedTarefa.getCategoria());
-        assertThat(capturedTarefa.getCategoria().getId()).isEqualTo(categoriaId);
+        assertNotNull(capturedTarefa.getCategory());
+        assertThat(capturedTarefa.getCategory().getId()).isEqualTo(categoryId);
     }
 
     @Test
-    void testIfCannotSaveWhenCategoriaDoesNotExist() {
+    void testIfCannotSaveWhenCategoryDoesNotExist() {
         // given
         TarefaDTO tarefaDTO = new TarefaDTO();
-        tarefaDTO.setCategoria_id(1L);
-        tarefaDTO.setPrioridade(0);
-        tarefaDTO.setTitulo("titulo");
-        tarefaDTO.setStatus(0);
-        tarefaDTO.setDescricao("descricao");
-        tarefaDTO.setPrazo(new Date());
+        tarefaDTO.setCategory_id(1L);
+        tarefaDTO.setPriority(Priority.LOW);
+        tarefaDTO.setTitle("titulo");
+        tarefaDTO.setStatus(Status.IN_PROGRESS);
+        tarefaDTO.setDescription("descricao");
+        tarefaDTO.setDeadline(LocalDate.now());
 
-        when(categoriaService.findById(1L)).thenReturn(Optional.empty());
+        when(categoryService.findById(1L)).thenReturn(Optional.empty());
         // then
-        assertThrows(CategoriaNotFoundException.class, () -> {
+        assertThrows(CategoryNotFoundException.class, () -> {
            // when
             tarefaService.save(tarefaDTO);
         });
@@ -212,11 +215,11 @@ class TarefaServiceTest {
     void testIfCannotTransformToDTOWhenSaving() {
         // given
         TarefaDTO tarefaDTO = new TarefaDTO();
-        tarefaDTO.setPrioridade(0);
-        tarefaDTO.setTitulo("titulo");
-        tarefaDTO.setStatus(0);
-        tarefaDTO.setDescricao("descricao");
-        tarefaDTO.setPrazo(new Date());
+        tarefaDTO.setPriority(Priority.LOW);
+        tarefaDTO.setTitle("titulo");
+        tarefaDTO.setStatus(Status.IN_PROGRESS);
+        tarefaDTO.setDescription("descricao");
+        tarefaDTO.setDeadline(LocalDate.now());
         // then
         assertThrows(TarefaNotFoundException.class, () -> {
             // when
@@ -231,14 +234,14 @@ class TarefaServiceTest {
 
         TarefaDTO newTarefaDTO = new TarefaDTO();
         newTarefaDTO.setId(tarefaId);
-        newTarefaDTO.setTitulo("titulo");
+        newTarefaDTO.setTitle("titulo");
 
         Tarefa newTarefa = new Tarefa(newTarefaDTO);
         newTarefa.setId(tarefaId);
 
         Tarefa existingTarefa = new Tarefa();
         existingTarefa.setId(tarefaId);
-        existingTarefa.setTitulo("");
+        existingTarefa.setTitle("");
 
         when(tarefaRepository.findById(tarefaId)).thenReturn(Optional.of(existingTarefa));
         when(tarefaRepository.save(any(Tarefa.class))).thenReturn(newTarefa);
@@ -252,7 +255,7 @@ class TarefaServiceTest {
         Tarefa capturedTarefa = tarefaArgumentCaptor.getValue();
         assertThat(capturedTarefa).isEqualTo(newTarefa);
         assertThat(capturedTarefa.getId()).isEqualTo(tarefaId);
-        assertThat(capturedTarefa.getTitulo()).isEqualTo("titulo");
+        assertThat(capturedTarefa.getTitle()).isEqualTo("titulo");
     }
 
     @Test
@@ -262,7 +265,7 @@ class TarefaServiceTest {
 
         TarefaDTO newTarefaDTO = new TarefaDTO();
         newTarefaDTO.setId(tarefaId);
-        newTarefaDTO.setTitulo("titulo");
+        newTarefaDTO.setTitle("titulo");
 
         when(tarefaRepository.findById(tarefaId)).thenReturn(Optional.empty());
         // when

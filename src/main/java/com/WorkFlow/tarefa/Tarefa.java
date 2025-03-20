@@ -1,11 +1,13 @@
 package com.WorkFlow.tarefa;
 
-import com.WorkFlow.categoria.Categoria;
+import com.WorkFlow.category.Category;
+import com.WorkFlow.enums.Priority;
+import com.WorkFlow.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -16,21 +18,24 @@ public class Tarefa {
     public Tarefa(TarefaDTO tarefaDTO) {
         this.id = tarefaDTO.getId();
         this.status = tarefaDTO.getStatus();
-        this.prazo = tarefaDTO.getPrazo();
-        this.descricao = tarefaDTO.getDescricao();
-        this.titulo = tarefaDTO.getTitulo();
-        this.prioridade = tarefaDTO.getPrioridade();
+        this.deadline = tarefaDTO.getDeadline();
+        this.description = tarefaDTO.getDescription();
+        this.title = tarefaDTO.getTitle();
+        this.priority = tarefaDTO.getPriority();
+        this.category.setId(tarefaDTO.getCategory_id());
     }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date prazo;
-    private String descricao;
-    private String titulo;
-    private Integer status;
-    private Integer prioridade;
+    private LocalDate deadline;
+    private String description;
+    private String title;
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
+    @Enumerated(EnumType.ORDINAL)
+    private Priority priority;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
+    @JoinColumn(name = "category_id")
+    private Category category = new Category();
 }

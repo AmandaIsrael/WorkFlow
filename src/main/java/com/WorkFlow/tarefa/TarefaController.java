@@ -29,9 +29,9 @@ public class TarefaController {
         return tarefaDTO.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("categoria/{categoriaId}")
-    public List<TarefaDTO> findByCategoriaId(@PathVariable Long categoriaId) {
-        return tarefaService.findByCategoriaId(categoriaId);
+    @GetMapping("category/{categoryId}")
+    public List<TarefaDTO> findByCategoryId(@PathVariable Long categoryId) {
+        return tarefaService.findByCategoryId(categoryId);
     }
 
     @PostMapping()

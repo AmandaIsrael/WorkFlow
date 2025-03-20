@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface TarefaRepository extends JpaRepository<Tarefa, Long> {
-    List<Tarefa> findByCategoriaId(Long categoriaId);
+    List<Tarefa> findByCategoryId(Long categoryId);
 }

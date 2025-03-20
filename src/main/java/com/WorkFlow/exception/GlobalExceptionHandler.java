@@ -25,8 +25,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiException, httpStatus);
     }
 
-    @ExceptionHandler(CategoriaNotFoundException.class)
-    public ResponseEntity<Object> handleCategoriaNotFound(CategoriaNotFoundException exception) {
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<Object> handlecategoryNotFound(CategoryNotFoundException exception) {
         return buildResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
