@@ -1,4 +1,4 @@
-package com.WorkFlow.tarefa;
+package com.WorkFlow.Task;
 
 import com.WorkFlow.enums.Priority;
 import com.WorkFlow.enums.Status;
@@ -13,18 +13,18 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-public class TarefaDTO {
+public class TaskDTO {
 
-    public TarefaDTO(Tarefa tarefa) {
-        this.id = tarefa.getId();
-        this.status = tarefa.getStatus();
-        this.deadline = tarefa.getDeadline();
-        this.description = tarefa.getDescription();
-        this.title = tarefa.getTitle();
-        this.priority = tarefa.getPriority();
+    public TaskDTO(Task task) {
+        this.id = task.getId();
+        this.status = task.getStatus();
+        this.deadline = task.getDeadline();
+        this.description = task.getDescription();
+        this.title = task.getTitle();
+        this.priority = task.getPriority();
 
-        if (tarefa.getCategory() != null) {
-            this.category_id = tarefa.getCategory().getId();
+        if (task.getCategory() != null) {
+            this.category_id = task.getCategory().getId();
         }
     }
 

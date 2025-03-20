@@ -1,7 +1,7 @@
 package com.WorkFlow.category;
 
-import com.WorkFlow.tarefa.Tarefa;
-import com.WorkFlow.tarefa.TarefaDTO;
+import com.WorkFlow.Task.Task;
+import com.WorkFlow.Task.TaskDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +19,9 @@ public class CategoryDTO {
         this.name = category.getName();
         this.icon = category.getIcon();
 
-        for (Tarefa tarefa : category.getTaskList()) {
-            TarefaDTO tarefaDTO = new TarefaDTO(tarefa);
-            this.taskList.add(tarefaDTO);
+        for (Task task : category.getTaskList()) {
+            TaskDTO taskDTO = new TaskDTO(task);
+            this.taskList.add(taskDTO);
         }
     }
 
@@ -31,5 +31,5 @@ public class CategoryDTO {
     private String color;
     private String icon;
 
-    private List<TarefaDTO> taskList = new ArrayList<>();
+    private List<TaskDTO> taskList = new ArrayList<>();
 }

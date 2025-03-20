@@ -30,8 +30,8 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(TarefaNotFoundException.class)
-    public ResponseEntity<Object> handleTarefaNotFound(TarefaNotFoundException exception) {
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<Object> handleTaskNotFound(TaskNotFoundException exception) {
         return buildResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 

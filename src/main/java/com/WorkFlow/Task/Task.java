@@ -1,4 +1,4 @@
-package com.WorkFlow.tarefa;
+package com.WorkFlow.Task;
 
 import com.WorkFlow.category.Category;
 import com.WorkFlow.enums.Priority;
@@ -12,17 +12,17 @@ import java.time.LocalDate;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "tarefa")
-public class Tarefa {
+@Table(name = "Task")
+public class Task {
 
-    public Tarefa(TarefaDTO tarefaDTO) {
-        this.id = tarefaDTO.getId();
-        this.status = tarefaDTO.getStatus();
-        this.deadline = tarefaDTO.getDeadline();
-        this.description = tarefaDTO.getDescription();
-        this.title = tarefaDTO.getTitle();
-        this.priority = tarefaDTO.getPriority();
-        this.category.setId(tarefaDTO.getCategory_id());
+    public Task(TaskDTO taskDTO) {
+        this.id = taskDTO.getId();
+        this.status = taskDTO.getStatus();
+        this.deadline = taskDTO.getDeadline();
+        this.description = taskDTO.getDescription();
+        this.title = taskDTO.getTitle();
+        this.priority = taskDTO.getPriority();
+        this.category.setId(taskDTO.getCategory_id());
     }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
