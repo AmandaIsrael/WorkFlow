@@ -36,18 +36,34 @@ public class TaskService {
     }
 
     public TaskDTO save(TaskDTO newTaskDTO) {
+        if (newTaskDTO == null) {
+            throw new IllegalArgumentException("TaskDTO can't be null");
+        }
+
         Task newTask = new Task(newTaskDTO);
-        updateCategory(newTask, newTaskDTO);
+        setCategoryIfPresent(newTask, newTaskDTO);
 
         Task taskCreated = taskRepository.save(newTask);
         return toTaskDTO(taskCreated);
     }
 
     public Optional<TaskDTO> put(Long id, TaskDTO newTaskDTO) {
-        return findById(id).map(existingTaskDTO -> {
-            updateTaskDTO(existingTaskDTO, newTaskDTO);
-            return save(existingTaskDTO);
-        });
+        return taskRepository.findById(id)
+                .map(task -> {
+                    updateTask(task, newTaskDTO);
+                    setCategoryIfPresent(task, newTaskDTO);
+                    return taskRepository.save(task);
+                })
+                .map(this::toTaskDTO);
+    }
+
+    public Optional<TaskDTO> putByCategoryId(Long id, Long category_id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(id));
+
+        task.setCategory(getCategory(category_id));
+        Task taskCreated = taskRepository.save(task);
+        return Optional.of(toTaskDTO(taskCreated));
     }
 
     public boolean existsById(Long id) {
@@ -69,30 +85,26 @@ public class TaskService {
     }
 
     private TaskDTO toTaskDTO(Task task) {
-        if (task == null) {
-            throw new TaskNotFoundException();
-        }
-        TaskDTO taskDTO = new TaskDTO(task);
-        updateCategoryId(task, taskDTO);
-        return taskDTO;
+        TaskDTO dto = new TaskDTO(task);
+        setCategoryIdIfPresent(task, dto);
+        return dto;
     }
 
-    private void updateTaskDTO(TaskDTO existingTaskDTO, TaskDTO newTaskDTO) {
-        existingTaskDTO.setStatus(newTaskDTO.getStatus());
-        existingTaskDTO.setDeadline(newTaskDTO.getDeadline());
-        existingTaskDTO.setDescription(newTaskDTO.getDescription());
-        existingTaskDTO.setTitle(newTaskDTO.getTitle());
-        existingTaskDTO.setPriority(newTaskDTO.getPriority());
-        existingTaskDTO.setCategory_id(newTaskDTO.getCategory_id());
+    private void updateTask(Task task, TaskDTO dto) {
+        task.setStatus(dto.getStatus());
+        task.setDeadline(dto.getDeadline());
+        task.setDescription(dto.getDescription());
+        task.setTitle(dto.getTitle());
+        task.setPriority(dto.getPriority());
     }
 
-    private void updateCategoryId(Task task, TaskDTO taskDTO) {
+    private void setCategoryIdIfPresent(Task task, TaskDTO taskDTO) {
         Optional.ofNullable(task.getCategory())
                 .map(Category::getId)
                 .ifPresent(taskDTO::setCategory_id);
     }
 
-    private void updateCategory(Task task, TaskDTO taskDTO) {
+    private void setCategoryIfPresent(Task task, TaskDTO taskDTO) {
         Optional.ofNullable(taskDTO.getCategory_id())
                 .map(this::getCategory)
                 .ifPresent(task::setCategory);

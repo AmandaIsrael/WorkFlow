@@ -17,7 +17,7 @@ public class CategoryService {
         return categoryRepository.findAll()
                 .stream()
                 .map(CategoryDTO::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Optional<CategoryDTO> findById(Long id) {
@@ -25,16 +25,21 @@ public class CategoryService {
     }
 
     public CategoryDTO save(CategoryDTO newCategoryDTO) {
+        if (newCategoryDTO == null) {
+            throw new IllegalArgumentException("CategoryDTO can't be null");
+        }
+
         Category newCategory = new Category(newCategoryDTO);
         Category categoryCreated = categoryRepository.save(newCategory);
         return new CategoryDTO(categoryCreated);
     }
 
-    public Optional<CategoryDTO> put(Long id, CategoryDTO newCategoryDTO) {
-        return findById(id).map(existingCategoryDTO -> {
-            updatecategoryDTO(existingCategoryDTO, newCategoryDTO);
-            return save(existingCategoryDTO);
-        });
+    public Optional<CategoryDTO> put(Long id, CategoryDTO categoryDTO) {
+        return categoryRepository.findById(id)
+                .map(existingCategory -> {
+                    updateCategory(existingCategory, categoryDTO);
+                    return new CategoryDTO(categoryRepository.save(existingCategory));
+                });
     }
 
     public boolean existsById(Long id) {
@@ -49,9 +54,9 @@ public class CategoryService {
         return exist;
     }
 
-    private void updatecategoryDTO(CategoryDTO existingCategoryDTO, CategoryDTO newCategoryDTO) {
-        existingCategoryDTO.setName(newCategoryDTO.getName());
-        existingCategoryDTO.setColor(newCategoryDTO.getColor());
-        existingCategoryDTO.setIcon(newCategoryDTO.getIcon());
+    private void updateCategory(Category category, CategoryDTO dto) {
+        category.setName(dto.getName());
+        category.setColor(dto.getColor());
+        category.setIcon(dto.getIcon());
     }
 }

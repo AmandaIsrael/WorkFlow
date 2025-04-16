@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/Task")
+@RequestMapping("/api/task")
 @RequiredArgsConstructor
 @Validated
 public class TaskController {
@@ -29,7 +29,7 @@ public class TaskController {
         return taskDTO.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("category/{categoryId}")
+    @GetMapping("/category/{category_id}")
     public List<TaskDTO> findByCategoryId(@PathVariable Long categoryId) {
         return taskService.findByCategoryId(categoryId);
     }
@@ -46,6 +46,12 @@ public class TaskController {
         return taskDTOUpdated.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}/{category_id}")
+    public ResponseEntity<TaskDTO> putByCategoryId(@PathVariable Long id, @PathVariable Long category_id) {
+        Optional<TaskDTO> taskDTOUpdated = taskService.putByCategoryId(id, category_id);
+        return taskDTOUpdated.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<TaskDTO> delete(@PathVariable Long id) {
         boolean deleted = taskService.delete(id);
@@ -54,5 +60,4 @@ public class TaskController {
         }
         return ResponseEntity.notFound().build();
     }
-
 }

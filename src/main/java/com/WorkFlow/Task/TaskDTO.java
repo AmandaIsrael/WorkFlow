@@ -3,8 +3,6 @@ package com.WorkFlow.Task;
 import com.WorkFlow.enums.Priority;
 import com.WorkFlow.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,8 +33,6 @@ public class TaskDTO {
     private String description;
     @NotNull(message = "The 'title' field cannot be null.")
     private String title;
-    @Enumerated(EnumType.ORDINAL)
     private Status status;
-    @Enumerated(EnumType.ORDINAL)
     private Priority priority;
 }

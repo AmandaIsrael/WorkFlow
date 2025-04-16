@@ -154,7 +154,7 @@ class TaskServiceTest {
 
         Task capturedTask = taskArgumentCaptor.getValue();
         assertThat(capturedTask).isEqualTo(task);
-        assertNull(capturedTask.getCategory());
+        assertNull(capturedTask.getCategory().getId());
     }
 
     @Test
@@ -212,18 +212,9 @@ class TaskServiceTest {
     }
 
     @Test
-    void testIfCannotTransformToDTOWhenSaving() {
-        // given
-        TaskDTO taskDTO = new TaskDTO();
-        taskDTO.setPriority(Priority.LOW);
-        taskDTO.setTitle("titulo");
-        taskDTO.setStatus(Status.IN_PROGRESS);
-        taskDTO.setDescription("descricao");
-        taskDTO.setDeadline(LocalDate.now());
-        // then
-        assertThrows(TaskNotFoundException.class, () -> {
-            // when
-            taskService.save(taskDTO);
+    void testIfCannotSaveWhenTaskDtoIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskService.save(null);
         });
     }
 
@@ -274,6 +265,72 @@ class TaskServiceTest {
         assertFalse(result.isPresent());
         verify(taskRepository).findById(taskId);
         verify(taskRepository, never()).save(any(Task.class));
+    }
+
+    @Test
+    void putByCategoryId_shouldUpdateTask_whenTaskAndCategoryExists() {
+        // given
+        Long taskId = 1L, categoryId = 1L;
+
+        Category category = new Category();
+        category.setId(categoryId);
+
+        CategoryDTO categoryDTO = new CategoryDTO(category);
+        categoryDTO.setId(categoryId);
+
+        Task existingTask = new Task();
+        existingTask.setId(taskId);
+
+        Task newTask = new Task();
+        newTask.setId(taskId);
+        newTask.setCategory(category);
+
+        TaskDTO newTaskDTO = new TaskDTO(newTask);
+        newTaskDTO.setId(taskId);
+        newTaskDTO.setCategory_id(categoryId);
+
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+        when(categoryService.findById(categoryId)).thenReturn(Optional.of(categoryDTO));
+        when(taskRepository.save(any(Task.class))).thenReturn(newTask);
+
+        // when
+        taskService.putByCategoryId(taskId, categoryId);
+        // then
+        ArgumentCaptor<Task> taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
+        verify(taskRepository).findById(taskId);
+        verify(taskRepository).save(taskArgumentCaptor.capture());
+
+        Task capturedTask = taskArgumentCaptor.getValue();
+        assertThat(capturedTask).isEqualTo(newTask);
+        assertThat(capturedTask.getId()).isEqualTo(taskId);
+        assertThat(capturedTask.getCategory().getId()).isEqualTo(categoryId);
+    }
+
+    @Test
+    void putByCategoryId_shouldUpdateTask_whenTaskDoesNotExists() {
+        // given
+        Long taskId = 1L, categoryId = 1L;
+
+        TaskDTO newTaskDTO = new TaskDTO();
+        newTaskDTO.setId(taskId);
+
+        when(taskRepository.findById(taskId)).thenReturn(Optional.empty());
+        // when
+        assertThrows(TaskNotFoundException.class, () -> taskService.putByCategoryId(taskId, categoryId));
+    }
+
+    @Test
+    void putByCategoryId_shouldUpdateTask_whenCategoryDoesNotExists() {
+        // given
+        Long taskId = 1L, categoryId = 1L;
+
+        Task existingTaskDTO = new Task();
+        existingTaskDTO.setId(taskId);
+
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTaskDTO));
+        when(categoryService.findById(categoryId)).thenReturn(Optional.empty());
+        // when
+        assertThrows(CategoryNotFoundException.class, () -> taskService.putByCategoryId(taskId, categoryId));
     }
 
     @Test
